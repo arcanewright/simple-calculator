@@ -1,23 +1,18 @@
-import logo from './logo.svg';
 import './App.css';
+import Calculator from "./calculator"
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="navBar">
+        <h2>Calculator</h2>
+        <div className="dummybar"></div>
+        <h3><a href="https://arcanewright.com">Arcane Wright Home</a></h3>
+      </div>
+      <Calculator></Calculator>
+      <div className="footer">
+        <p>This is my first published project. I decided to finally write something I felt comfortable putting up and finishing. Finished on 5/28/2021, using create-react-app. Source Code on GitHub.</p>
+      </div>
     </div>
   );
 }
