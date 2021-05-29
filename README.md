@@ -1,7 +1,7 @@
 # Simple Calculator with Create React App
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-You can find the live calculator at [Simple Calculator](https://simplecalculator.arcanewright.com/)
+You can find the live calculator at [Simple Calculator](https://simplecalculator.arcanewright.com/).
 
 ## What is this?
 It's a simple calculator. You should be able to use a keyboard for input, as well as manually clicking the numbers. 
