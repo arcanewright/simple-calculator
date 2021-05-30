@@ -6,6 +6,7 @@ class Calculator extends React.Component {
         super()
         this.state = {value:"", justSolved:false, lastValue:""}
         this.addSymbol = this.addSymbol.bind(this)
+        this.addDigit = this.addDigit.bind(this)
         this.validateAndSet = this.validateAndSet.bind(this)
         this.clear = this.clear.bind(this)
         this.solve = this.solve.bind(this)
@@ -18,11 +19,8 @@ class Calculator extends React.Component {
         }
         var regex = new RegExp(/[^x/+-.]/g)
         var isNonDecimal = new RegExp(/[x/+-]/g)
-        var twoDecimalsWithinOneTerm = new RegExp(/\.(\d)*\./) //add this in
-        if (regex.test(symbol)) {
-            this.setState({value: valueToUse + symbol, justSolved:false})
-        }
-        else if (valueToUse.length === 0) {
+        var twoDecimalsWithinOneTerm = new RegExp(/\.(\d)*\./)
+        if (valueToUse.length === 0) {
             if (symbol === ".") {
                 this.setState({value: "0.", justSolved:false})
             }
@@ -43,6 +41,15 @@ class Calculator extends React.Component {
         
     }
 
+    addDigit (symbol) {
+        var valueToUse = "";
+        if (!this.state.justSolved) {
+            valueToUse = this.state.value
+        }
+        this.setState({value: valueToUse + symbol, justSolved:false})
+        
+    }
+
     clear () {
         this.setState({value:"", justSolved:false})
     }
@@ -53,9 +60,9 @@ class Calculator extends React.Component {
         var lastOperation = 0
         for (var i = 0; i < this.state.value.length; i++) {
             if (i===0 && this.state.value.charAt(i) === "-") {
-                
+                break;
             }
-            else if (operationsCheck.test(this.state.value.charAt(i))) {
+            if (operationsCheck.test(this.state.value.charAt(i))) {
                 brokenDown.push(parseFloat(this.state.value.substring(lastOperation, i)))
                 lastOperation = i + 1
                 brokenDown.push(this.state.value.charAt(i))
@@ -188,18 +195,19 @@ class Calculator extends React.Component {
         var twoSymbolsInRow = new RegExp(/([x/+\-.]{2,})/)
         var symbolsFirst = new RegExp(/(^[+\-/x])/)
         var twoDecimalsWithinOneTerm = new RegExp(/\.(\d)*\./)
-        if (!otherSymbols.test(change)) {
-            if (!twoSymbolsInRow.test(change)) {
-                if (!symbolsFirst.test(change)) {
-                    if (!twoDecimalsWithinOneTerm.test(change)) {
-                        this.setState({value: change, justSolved:false})
-                    }
-                }
-            }
+        if (!otherSymbols.test(change) && !twoSymbolsInRow.test(change) && !symbolsFirst.test(change) && !twoDecimalsWithinOneTerm.test(change)) {
+            this.setState({value: change, justSolved:false})
         }
     }
 
     render () {
+        var numButtons = [];
+        for (var i=7; i > 0; i-=3) {
+            for (var j = 0; j < 3; j++) {
+                numButtons.push(<CalcButton key={i+j} type="number" execute={this.addDigit}>{i+j}</CalcButton>)
+            }
+        }
+
         return (
             <div className="Calculator">
                 <h1>Simple Calculator</h1>
@@ -210,17 +218,9 @@ class Calculator extends React.Component {
                     <CalcButton type="function solve" execute={this.solve}>=</CalcButton>
                 </div>
                 <div className="numpad grid">
-                    <CalcButton type="number" execute={this.addSymbol}>7</CalcButton>
-                    <CalcButton type="number" execute={this.addSymbol}>8</CalcButton>
-                    <CalcButton type="number" execute={this.addSymbol}>9</CalcButton>
-                    <CalcButton type="number" execute={this.addSymbol}>4</CalcButton>
-                    <CalcButton type="number" execute={this.addSymbol}>5</CalcButton>
-                    <CalcButton type="number" execute={this.addSymbol}>6</CalcButton>
-                    <CalcButton type="number" execute={this.addSymbol}>1</CalcButton>
-                    <CalcButton type="number" execute={this.addSymbol}>2</CalcButton>
-                    <CalcButton type="number" execute={this.addSymbol}>3</CalcButton>
+                    {numButtons}
                     <CalcButton type="operation" execute={this.addSymbol}>.</CalcButton>
-                    <CalcButton type="number" execute={this.addSymbol}>0</CalcButton>
+                    <CalcButton type="number" execute={this.addDigit}>0</CalcButton>
                     <div className="button dummy"></div>
                 </div>
                 <div className="oppad grid">
